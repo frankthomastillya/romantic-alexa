@@ -21,6 +21,7 @@ def take_command():
         with sr.Microphone() as source:
             print('listening...')
             voice = listener.listen(source)
+            global command
             command = listener.recognize_google(voice)
             command = command.lower()
             if 'alexa' in command:
@@ -28,20 +29,20 @@ def take_command():
                 print(command)
     except:
         pass
-    return command
+        return command
 
 
 def run_alexa():
-    command = take_command()
     print(command)
-    if 'play' in command:
+    if 'time' in command:
+        time = datetime.datetime.now().strftime('%I:%M %p')
+        print(time)
+        talk('Current time is ' + time)
+    elif 'play' in command:
         song = command.replace('play', '')
         talk('playing ' + song)
         pywhatkit.playonyt(song)
-    elif 'time' in command:
-        time = datetime.datetime.now().strftime('%I:%M %p')
-        talk('Current time is ' + time)
-    elif 'who the heck is' in command:
+    elif 'who is' in command:
         person = command.replace('who the heck is', '')
         info = wikipedia.summary(person, 1)
         print(info)
@@ -56,5 +57,5 @@ def run_alexa():
         talk('Please say the command again.')
 
 
-while True:
-    run_alexa()
+take_command()
+run_alexa()
